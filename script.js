@@ -1,28 +1,30 @@
 //your code here
-
-// Select main elements
 const main = document.querySelector('main');
+
+// Heading message
 const mainMsg = document.createElement('h3');
 mainMsg.id = 'h';
 mainMsg.textContent = "Please click on the identical tiles to verify that you are not a robot.";
 main.appendChild(mainMsg);
 
+// Result paragraph
 const message = document.createElement('p');
 message.id = 'para';
 main.appendChild(message);
 
-// Create buttons
+// Reset button
 const resetBtn = document.createElement('button');
 resetBtn.id = 'reset';
 resetBtn.textContent = 'Reset';
 main.appendChild(resetBtn);
 
+// Verify button
 const verifyBtn = document.createElement('button');
 verifyBtn.id = 'verify';
 verifyBtn.textContent = 'Verify';
 main.appendChild(verifyBtn);
 
-// Array of image URLs
+// Image URLs
 const images = [
   'https://picsum.photos/id/237/200/300',
   'https://picsum.photos/seed/picsum/200/300',
@@ -31,7 +33,7 @@ const images = [
   'https://picsum.photos/200/300.jpg'
 ];
 
-// Function to shuffle an array
+// Shuffle function
 function shuffle(array) {
   return array.sort(() => 0.5 - Math.random());
 }
@@ -39,22 +41,20 @@ function shuffle(array) {
 // Track selected images
 let selectedImages = [];
 
-// Generate 6 images (one duplicate randomly)
+// Generate images
 function generateImages() {
-  // Pick a random image to duplicate
   const duplicateIndex = Math.floor(Math.random() * images.length);
-  const tempImages = [...images, images[duplicateIndex]]; // 6 images total
+  const tempImages = [...images, images[duplicateIndex]]; // 6 images
 
   const shuffledImages = shuffle(tempImages);
 
-  // Create image elements
   const container = document.createElement('div');
   container.classList.add('flex');
 
   shuffledImages.forEach((src, index) => {
     const img = document.createElement('img');
     img.src = src;
-    img.dataset.src = src; // for comparison
+    img.dataset.src = src;
     img.classList.add(`img${index + 1}`);
     img.addEventListener('click', imageClick);
     container.appendChild(img);
@@ -63,28 +63,25 @@ function generateImages() {
   main.appendChild(container);
 }
 
-// Handle image clicks
+// Image click handler
 function imageClick(e) {
   const img = e.target;
 
-  // Prevent selecting the same image twice
   if (selectedImages.includes(img)) return;
 
   img.classList.add('selected');
   selectedImages.push(img);
 
-  // Show Reset button after first click
   if (selectedImages.length >= 1) {
-    resetBtn.classList.add('show');
+    resetBtn.classList.add('show'); // show Reset
   }
 
-  // Show Verify button after second click
   if (selectedImages.length === 2) {
-    verifyBtn.classList.add('show');
+    verifyBtn.classList.add('show'); // show Verify
   }
 }
 
-// Reset game
+// Reset handler
 resetBtn.addEventListener('click', () => {
   selectedImages.forEach(img => img.classList.remove('selected'));
   selectedImages = [];
@@ -94,7 +91,7 @@ resetBtn.addEventListener('click', () => {
   mainMsg.textContent = "Please click on the identical tiles to verify that you are not a robot.";
 });
 
-// Verify selection
+// Verify handler
 verifyBtn.addEventListener('click', () => {
   if (selectedImages.length === 2) {
     const [first, second] = selectedImages;
@@ -104,8 +101,9 @@ verifyBtn.addEventListener('click', () => {
       message.textContent = "We can't verify you as a human. You selected the non-identical tiles.";
     }
   }
-  verifyBtn.classList.remove('show');
+  verifyBtn.classList.remove('show'); // hide Verify
 });
 
-// Initialize
+// Initialize game
 generateImages();
+
