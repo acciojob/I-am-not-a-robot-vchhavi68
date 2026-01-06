@@ -1,30 +1,31 @@
 //your code here
+
 const main = document.querySelector('main');
 
-// Heading message
+
 const mainMsg = document.createElement('h3');
 mainMsg.id = 'h';
 mainMsg.textContent = "Please click on the identical tiles to verify that you are not a robot.";
 main.appendChild(mainMsg);
 
-// Result paragraph
+
 const message = document.createElement('p');
 message.id = 'para';
 main.appendChild(message);
 
-// Reset button
+
 const resetBtn = document.createElement('button');
 resetBtn.id = 'reset';
 resetBtn.textContent = 'Reset';
 main.appendChild(resetBtn);
 
-// Verify button
+
 const verifyBtn = document.createElement('button');
 verifyBtn.id = 'verify';
 verifyBtn.textContent = 'Verify';
 main.appendChild(verifyBtn);
 
-// Image URLs
+
 const images = [
   'https://picsum.photos/id/237/200/300',
   'https://picsum.photos/seed/picsum/200/300',
@@ -33,15 +34,15 @@ const images = [
   'https://picsum.photos/200/300.jpg'
 ];
 
-// Shuffle function
+
 function shuffle(array) {
   return array.sort(() => 0.5 - Math.random());
 }
 
-// Track selected images
+
 let selectedImages = [];
 
-// Generate images
+
 function generateImages() {
   const duplicateIndex = Math.floor(Math.random() * images.length);
   const tempImages = [...images, images[duplicateIndex]]; // 6 images
@@ -63,7 +64,7 @@ function generateImages() {
   main.appendChild(container);
 }
 
-// Image click handler
+
 function imageClick(e) {
   const img = e.target;
 
@@ -81,7 +82,7 @@ function imageClick(e) {
   }
 }
 
-// Reset handler
+
 resetBtn.addEventListener('click', () => {
   selectedImages.forEach(img => img.classList.remove('selected'));
   selectedImages = [];
@@ -91,7 +92,7 @@ resetBtn.addEventListener('click', () => {
   mainMsg.textContent = "Please click on the identical tiles to verify that you are not a robot.";
 });
 
-// Verify handler
+
 verifyBtn.addEventListener('click', () => {
   if (selectedImages.length === 2) {
     const [first, second] = selectedImages;
@@ -104,6 +105,5 @@ verifyBtn.addEventListener('click', () => {
   verifyBtn.classList.remove('show'); // hide Verify
 });
 
-// Initialize game
-generateImages();
 
+generateImages();

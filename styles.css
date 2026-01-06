@@ -37,7 +37,7 @@ p {
 
 button {
   margin: 20px;
-  display: none; 
+	display: none; 
 }
 
 button.show {
