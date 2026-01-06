@@ -1,102 +1,100 @@
 //your code here
-const main = document.querySelector('main');
 
-// Create elements
+// Select main elements
+const main = document.querySelector('main');
 const mainMsg = document.createElement('h3');
 mainMsg.id = 'h';
+mainMsg.textContent = "Please click on the identical tiles to verify that you are not a robot.";
 main.appendChild(mainMsg);
-
-const imageContainer = document.createElement('div');
-imageContainer.classList.add('flex');
-main.appendChild(imageContainer);
-
-const resetBtn = document.createElement('button');
-resetBtn.id = 'reset';
-resetBtn.textContent = 'Reset';
-resetBtn.style.display = 'none';
-main.appendChild(resetBtn);
-
-const verifyBtn = document.createElement('button');
-verifyBtn.id = 'verify';
-verifyBtn.textContent = 'Verify';
-verifyBtn.style.display = 'none';
-main.appendChild(verifyBtn);
 
 const message = document.createElement('p');
 message.id = 'para';
 main.appendChild(message);
 
+// Create buttons
+const resetBtn = document.createElement('button');
+resetBtn.id = 'reset';
+resetBtn.textContent = 'Reset';
+main.appendChild(resetBtn);
 
- const images = [
-  "https://picsum.photos/id/237/200/300",
-  "https://picsum.photos/seed/picsum/200/300",
-  "https://picsum.photos/200/300?grayscale",
-  "https://picsum.photos/200/300/",
-  "https://picsum.photos/200/300.jpg"
+const verifyBtn = document.createElement('button');
+verifyBtn.id = 'verify';
+verifyBtn.textContent = 'Verify';
+main.appendChild(verifyBtn);
+
+// Array of image URLs
+const images = [
+  'https://picsum.photos/id/237/200/300',
+  'https://picsum.photos/seed/picsum/200/300',
+  'https://picsum.photos/200/300?grayscale',
+  'https://picsum.photos/200/300/',
+  'https://picsum.photos/200/300.jpg'
 ];
 
+// Function to shuffle an array
+function shuffle(array) {
+  return array.sort(() => 0.5 - Math.random());
+}
+
+// Track selected images
 let selectedImages = [];
 
-// Shuffle function
-function shuffle(array) {
-  return array.sort(() => Math.random() - 0.5);
-}
-
-// Initialize images
-function initImages() {
-  imageContainer.innerHTML = '';
-  selectedImages = [];
-  resetBtn.style.display = 'none';
-  verifyBtn.style.display = 'none';
-  message.textContent = '';
-  mainMsg.textContent = "Please click on the identical tiles to verify that you are not a robot.";
-
-  // Pick one image randomly to duplicate
+// Generate 6 images (one duplicate randomly)
+function generateImages() {
+  // Pick a random image to duplicate
   const duplicateIndex = Math.floor(Math.random() * images.length);
-  const imgArray = [...images, images[duplicateIndex]];
+  const tempImages = [...images, images[duplicateIndex]]; // 6 images total
 
-  // Shuffle images
-  const shuffled = shuffle(imgArray);
+  const shuffledImages = shuffle(tempImages);
 
-  // Add images to container
-  shuffled.forEach((src, index) => {
-    const img = document.createElement("img");
+  // Create image elements
+  const container = document.createElement('div');
+  container.classList.add('flex');
+
+  shuffledImages.forEach((src, index) => {
+    const img = document.createElement('img');
     img.src = src;
     img.dataset.src = src; // for comparison
-    img.classList.add(`img${index + 1}`); // Add classes for Cypress
-    img.addEventListener("click", imageClick);
-    imageContainer.appendChild(img);
+    img.classList.add(`img${index + 1}`);
+    img.addEventListener('click', imageClick);
+    container.appendChild(img);
   });
+
+  main.appendChild(container);
 }
 
-// Image click handler
+// Handle image clicks
 function imageClick(e) {
   const img = e.target;
-  if (selectedImages.includes(img)) return; // prevent double click
+
+  // Prevent selecting the same image twice
+  if (selectedImages.includes(img)) return;
 
   img.classList.add('selected');
   selectedImages.push(img);
 
+  // Show Reset button after first click
   if (selectedImages.length >= 1) {
-    resetBtn.style.display = 'inline-block';
+    resetBtn.classList.add('show');
   }
 
+  // Show Verify button after second click
   if (selectedImages.length === 2) {
-    verifyBtn.style.display = 'inline-block';
+    verifyBtn.classList.add('show');
   }
 }
 
-// Reset handler
+// Reset game
 resetBtn.addEventListener('click', () => {
   selectedImages.forEach(img => img.classList.remove('selected'));
   selectedImages = [];
-  resetBtn.style.display = 'none';
-  verifyBtn.style.display = 'none';
+  resetBtn.classList.remove('show');
+  verifyBtn.classList.remove('show');
   message.textContent = '';
   mainMsg.textContent = "Please click on the identical tiles to verify that you are not a robot.";
 });
 
-// Verify handler
+// Verify selection
 verifyBtn.addEventListener('click', () => {
   if (selectedImages.length === 2) {
     const [first, second] = selectedImages;
@@ -106,8 +104,8 @@ verifyBtn.addEventListener('click', () => {
       message.textContent = "We can't verify you as a human. You selected the non-identical tiles.";
     }
   }
-  verifyBtn.style.display = 'none';
+  verifyBtn.classList.remove('show');
 });
 
-// Initialize on load
-initImages();
+// Initialize
+generateImages();

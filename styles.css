@@ -37,4 +37,9 @@ p {
 
 button {
   margin: 20px;
+  display: none; 
+}
+
+button.show {
+  display: inline-block; 
 }
